@@ -1,0 +1,6 @@
+quarkus:
+  datasource:
+    username: postgres
+    password: postgres
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/bazar_file

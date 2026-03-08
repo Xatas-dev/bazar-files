@@ -1,0 +1,13 @@
+quarkus:
+  datasource:
+    db-kind: postgresql
+    username: ${SYSTEM_DB_USERNAME}
+    password: ${SYSTEM_DB_PASSWORD}
+    jdbc:
+      url: ${SYSTEM_DB_URL}
+    devservices:
+      enabled: false
+
+  liquibase:
+    migrate-at-start: true
+    change-log: db/changelog/changelog-master.yaml
