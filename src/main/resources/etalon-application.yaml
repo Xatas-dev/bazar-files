@@ -6,10 +6,15 @@ quarkus:
       url: jdbc:postgresql://localhost:5432/bazar_file
 
   s3:
-    endpoint: http://localhost:9000
-    access-key: test
-    secret-key: test123
-    region: us-east-1
+    endpoint-override: http://localhost:9000
+    path-style-access: true
+    aws:
+      region: us-east-1
+      credentials:
+        type: static
+        static-provider:
+          access-key-id: test
+          secret-access-key: test123
 
 settings:
   s3:
