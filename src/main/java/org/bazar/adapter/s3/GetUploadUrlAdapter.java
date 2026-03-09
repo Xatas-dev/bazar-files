@@ -30,7 +30,7 @@ public class GetUploadUrlAdapter implements GetUploadUrlOutbound {
                 .build();
         PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
                 .putObjectRequest(objectRequest)
-                .signatureDuration(Duration.ofMinutes(configProvider.getUploadUrlTtl()))
+                .signatureDuration(Duration.ofSeconds(configProvider.getUploadUrlTtl()))
                 .build();
         return s3Presigner.presignPutObject(presignRequest).url().toString();
     }

@@ -17,7 +17,6 @@ quarkus:
     access-key: ${SYSTEM_S3_ACCESS_KEY}
     secret-key: ${SYSTEM_S3_SECRET_KEY}
     region: ${SYSTEM_S3_REGION}
-    path-style-access-enabled: true
 
 settings:
   s3:
