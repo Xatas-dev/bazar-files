@@ -1,0 +1,28 @@
+package org.bazar.fw;
+
+import io.smallrye.config.ConfigMapping;
+import org.bazar.app.api.ConfigProvider;
+
+@ConfigMapping(prefix = "settings")
+public interface QuarkusSettingProperties extends ConfigProvider {
+    S3 s3();
+
+    interface S3 {
+        Bucket bucket();
+        int urlTtl();
+    }
+
+    interface Bucket {
+        String files();
+    }
+
+    @Override
+    default String getFilesBucketName() {
+        return s3().bucket().files();
+    }
+
+    @Override
+    default int getUploadUrlTtl() {
+        return s3().urlTtl();
+    }
+}

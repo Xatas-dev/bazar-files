@@ -11,3 +11,16 @@ quarkus:
   liquibase:
     migrate-at-start: true
     change-log: db/changelog/changelog-master.yaml
+
+  s3:
+    endpoint: ${SYSTEM_S3_ENDPOINT}
+    access-key: ${SYSTEM_S3_ACCESS_KEY}
+    secret-key: ${SYSTEM_S3_SECRET_KEY}
+    region: ${SYSTEM_S3_REGION}
+    path-style-access-enabled: true
+
+settings:
+  s3:
+    bucket:
+      files: ${SETTING_S3_BUCKET_FILES}
+    url-ttl: ${SETTING_S3_URL_TTL}

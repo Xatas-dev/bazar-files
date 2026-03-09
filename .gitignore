@@ -40,3 +40,6 @@ src/main/resources/application-local.yaml
 /.quarkus/cli/plugins/
 # TLS Certificates
 .certs/
+
+# S3
+data
