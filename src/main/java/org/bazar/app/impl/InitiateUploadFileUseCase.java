@@ -4,7 +4,7 @@ import org.bazar.app.api.GetUploadUrlOutbound;
 import org.bazar.app.api.InitiateUploadFileInbound;
 import org.bazar.app.api.UnitOfWork;
 import org.bazar.app.api.UploadedFileRepository;
-import org.bazar.domain.UploadedFile;
+import org.bazar.domain.File;
 
 import java.util.UUID;
 
@@ -22,11 +22,11 @@ public class InitiateUploadFileUseCase implements InitiateUploadFileInbound {
     @Override
     public String execute(String extension) {
         return unitOfWork.perform(() -> {
-            UploadedFile uploadedFile = new UploadedFile();
-            uploadedFile.setFileUuid(UUID.randomUUID().toString());
-            uploadedFileRepository.save(uploadedFile);
+            File file = new File();
+            file.setFileUuid(UUID.randomUUID().toString());
+            uploadedFileRepository.save(file);
 
-            return getUploadUrlOutbound.execute(uploadedFile.getFileUuid(), extension);
+            return getUploadUrlOutbound.execute(file.getFileUuid(), extension);
         });
     }
 }
