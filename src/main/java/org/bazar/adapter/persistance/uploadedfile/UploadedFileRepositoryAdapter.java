@@ -4,7 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import org.bazar.app.api.UploadedFileRepository;
-import org.bazar.domain.UploadedFile;
+import org.bazar.domain.File;
 
 import java.util.List;
 
@@ -20,15 +20,15 @@ public class UploadedFileRepositoryAdapter implements UploadedFileRepository {
     }
 
     @Override
-    public void save(UploadedFile uploadedFile) {
-        UploadedFileEntity entity = uploadedFileMapper.toEntity(uploadedFile);
+    public void save(File file) {
+        FileEntity entity = uploadedFileMapper.toEntity(file);
         entityManager.persist(entity);
     }
 
     @Override
-    public List<UploadedFile> findAll() {
+    public List<File> findAll() {
         return entityManager
-                .createQuery("SELECT e FROM UploadedFileEntity e", UploadedFileEntity.class)
+                .createQuery("SELECT e FROM FileEntity e", FileEntity.class)
                 .getResultList()
                 .stream()
                 .map(uploadedFileMapper::toDomain)
