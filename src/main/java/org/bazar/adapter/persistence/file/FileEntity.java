@@ -1,11 +1,11 @@
-package org.bazar.adapter.persistance.uploadedfile;
+package org.bazar.adapter.persistence.file;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.bazar.adapter.persistance.DomainObject;
+import org.bazar.adapter.persistence.DomainObject;
 
 import java.util.UUID;
 

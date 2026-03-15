@@ -1,4 +1,4 @@
-package org.bazar.adapter.persistance.unitofwork;
+package org.bazar.adapter.persistence.unitofwork;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;

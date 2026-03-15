@@ -1,4 +1,4 @@
-package org.bazar.adapter.persistance;
+package org.bazar.adapter.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
