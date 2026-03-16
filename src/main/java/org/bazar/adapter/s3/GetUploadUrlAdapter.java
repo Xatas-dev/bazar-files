@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bazar.app.api.ConfigProvider;
 import org.bazar.app.api.GetUploadUrlOutbound;
+import org.bazar.domain.File;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
@@ -22,11 +23,11 @@ public class GetUploadUrlAdapter implements GetUploadUrlOutbound {
     }
 
     @Override
-    public String execute(String fileUuid, String extension) {
+    public String execute(File file) {
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(configProvider.getFilesBucketName())
-                .key(fileUuid + extension)
-                .contentType("application/octet-stream")
+                .key(file.getObjectKey())
+                .contentType(file.getContentType())
                 .build();
         PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
                 .putObjectRequest(objectRequest)

@@ -50,5 +50,5 @@ public class File {
     /**
      * Статус файла
      */
-    private String status;
+    private FileStatus status;
 }
