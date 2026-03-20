@@ -8,8 +8,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import org.bazar.app.api.InitiateUploadFileInbound;
-import org.bazar.domain.File;
-import org.bazar.domain.FileInfo;
+import org.bazar.app.impl.commands.InitiateUploadCommand;
+import org.bazar.app.impl.output.FileInfo;
 
 @Path("/api/files")
 public class FileResource {
@@ -28,8 +28,8 @@ public class FileResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public InitiateUploadResponse initiateUpload(@QueryParam("fileName") String fileName, @QueryParam("size") Integer size,
                                  @QueryParam("contentType") String contentType, @QueryParam("domain") String domain) {
-        File file = restFileMapper.toDomain(fileName, size, contentType, domain);
-        FileInfo result = initiateUploadFileInbound.execute(file);
+        InitiateUploadCommand command = restFileMapper.toInitiateUploadCommand(fileName, size, contentType, domain);
+        FileInfo result = initiateUploadFileInbound.execute(command);
         return restFileMapper.toInitiateUploadResponse(result);
     }
 }

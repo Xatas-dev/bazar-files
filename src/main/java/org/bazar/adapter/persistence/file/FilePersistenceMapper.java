@@ -12,4 +12,9 @@ public interface FilePersistenceMapper {
      * Преобразует доменную сущность файла в ORM-сущность
      */
     FileEntity toEntity(File file);
+
+    /**
+     * Преобразует ORM-сущность файла в доменную сущность
+     */
+    File toDomain(FileEntity entity);
 }
