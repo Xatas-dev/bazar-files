@@ -3,7 +3,7 @@ CREATE TABLE file (
     file_uuid UUID NOT NULL,
     domain varchar NOT NULL,
     content_type varchar NOT NULL,
-    size integer NOT NULL,
+    size bigint NOT NULL,
     file_name varchar NOT NULL,
     object_key varchar NOT NULL,
     status varchar NOT NULL,

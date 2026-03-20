@@ -1,4 +1,4 @@
-package org.bazar.domain;
+package org.bazar.app.impl.output;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

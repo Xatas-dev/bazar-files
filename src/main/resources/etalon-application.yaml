@@ -21,3 +21,13 @@ settings:
     bucket:
       files: files
     url-ttl: 3600
+
+kafka:
+  bootstrap:
+    servers: localhost:9092
+mp:
+  messaging:
+    outgoing:
+      file.events:
+        bootstrap:
+          servers: localhost:9092
