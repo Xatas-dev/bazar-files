@@ -21,7 +21,7 @@ dependencies {
     implementation("io.quarkus:quarkus-rest")
     implementation("io.quarkus:quarkus-rest-jackson")
     implementation("io.quarkus:quarkus-liquibase")
-    implementation("io.quarkus:quarkus-kafka-streams")
+    implementation("io.quarkus:quarkus-smallrye-reactive-messaging-kafka:3.15.7")
     implementation("io.quarkiverse.amazonservices:quarkus-amazon-s3")
     implementation("io.quarkus:quarkus-config-yaml")
     implementation("io.quarkus:quarkus-arc")

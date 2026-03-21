@@ -28,3 +28,18 @@ settings:
     bucket:
       files: ${SETTING_S3_BUCKET_FILES}
     url-ttl: ${SETTING_S3_URL_TTL}
+
+kafka:
+  bootstrap:
+    servers: ${INTEGRATION_KAFKA_BOOTSTRAP_SERVERS}
+
+mp:
+  messaging:
+    outgoing:
+      file.events:
+        connector: smallrye-kafka
+        topic: file.events
+        bootstrap:
+          servers: ${INTEGRATION_KAFKA_BOOTSTRAP_SERVERS}
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
