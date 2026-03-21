@@ -2,7 +2,7 @@ package org.bazar.app.impl.commands;
 
 public record InitiateUploadCommand(
         String fileName,
-        Integer size,
+        Long size,
         String contentType,
         String domain
 ) {

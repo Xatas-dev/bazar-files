@@ -16,7 +16,7 @@ public record S3WebhookEvent(
 
     public record S3Object(
             String key,
-            Integer size,
+            Long size,
             String contentType
     ) {}
 }

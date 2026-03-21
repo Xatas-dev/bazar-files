@@ -4,7 +4,7 @@ public record FileEventOut(
         String fileName,
         String domain,
         String contentType,
-        Integer size,
+        Long size,
         String fileUuid,
         String status
 ) {
