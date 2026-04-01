@@ -6,7 +6,7 @@ FROM gradle:9.2.1-jdk21 AS builder
 WORKDIR /app
 
 # Copy gradle configuration first to cache dependencies
-COPY build.gradle.kts settings.gradle.kts ./
+COPY build.gradle.kts settings.gradle ./
 COPY gradle ./gradle
 
 COPY src ./src
