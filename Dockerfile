@@ -32,10 +32,10 @@ ENV JDK_JAVA_OPTIONS="-XX:MaxRAMPercentage=80.0 -XX:+UseStringDeduplication -XX:
 
 # Copy the layers extracted in Stage 1
 # Order matters: dependencies are least likely to change, application is most likely
-COPY --from=builder /app/build/libs/extracted/dependencies/ ./
-COPY --from=builder /app/build/libs/extracted/spring-boot-loader/ ./
-COPY --from=builder /app/build/libs/extracted/snapshot-dependencies/ ./
-COPY --from=builder /app/build/libs/extracted/application/ ./
+COPY --from=builder /app/build/quarkus-app/lib/ ./
+COPY --from=builder /app/build/quarkus-app/*.jar ./
+COPY --from=builder /app/build/quarkus-app/app/ ./
+COPY --from=builder /app/build/quarkus-app/quarkus/ ./
 
 
 ENTRYPOINT ["java", "-jar", "application.jar"]
