@@ -10,7 +10,7 @@ COPY build.gradle.kts settings.gradle gradle.properties ./
 COPY gradle ./gradle
 
 COPY src ./src
-RUN gradle bootJar -x test --no-daemon
+RUN gradle build -x test --no-daemon
 
 # Extract layers for optimization
 # This splits the fat jar into dependencies, loader, and application code
