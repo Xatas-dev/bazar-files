@@ -14,9 +14,6 @@ RUN gradle build -x test --no-daemon
 
 # Extract layers for optimization
 # This splits the fat jar into dependencies, loader, and application code
-RUN mv build/libs/bazar-files-*.jar build/libs/application.jar
-WORKDIR /app/build/libs
-RUN java -Djarmode=tools -jar application.jar extract --layers --destination extracted
 
 # ==========================================
 # Stage 2: Create the Runtime Image
