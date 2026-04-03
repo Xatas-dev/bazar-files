@@ -39,7 +39,7 @@ public class FileEntity extends DomainObject {
      * Размер файла в байтах
      */
     @Column(name = "size")
-    private Integer size;
+    private Long size;
 
     /**
      * Имя файла

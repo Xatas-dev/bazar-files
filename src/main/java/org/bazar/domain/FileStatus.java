@@ -2,5 +2,6 @@ package org.bazar.domain;
 
 public enum FileStatus {
     INIT,
-    UPLOADED
+    UPLOADED,
+    ERROR
 }
