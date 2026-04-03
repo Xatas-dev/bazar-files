@@ -29,7 +29,7 @@ ENV JDK_JAVA_OPTIONS="-XX:MaxRAMPercentage=80.0 -XX:+UseStringDeduplication -XX:
 # Create a non-root user for security (best practice)
 RUN addgroup -S spring && adduser -S spring -G spring && chown -R spring:spring /application
 USER spring:spring
-
+# пасхалка
 # Copy the layers extracted in Stage 1
 # Order matters: dependencies are least likely to change, application is most likely
 COPY --from=builder /app/build/quarkus-app/lib/ ./
