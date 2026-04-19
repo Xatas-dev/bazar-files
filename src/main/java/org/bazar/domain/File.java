@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 /**
  * Сущность файла в хранилище
  */
@@ -21,7 +23,7 @@ public class File {
     /**
      * Уникальный идентификатор файла в хранилище
      */
-    private String fileUuid;
+    private UUID fileUuid;
     /**
      * Домен, для которого был загружен файл
      */

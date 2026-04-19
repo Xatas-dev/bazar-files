@@ -1,4 +1,5 @@
 package org.bazar.adapter.rest.files;
+
 /**
  * Ответ на запрос на инициацию загрузки файла
  *

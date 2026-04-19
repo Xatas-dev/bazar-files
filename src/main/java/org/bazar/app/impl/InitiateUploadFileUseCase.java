@@ -2,7 +2,7 @@ package org.bazar.app.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.bazar.app.api.FileRepository;
-import org.bazar.app.api.GetUploadUrlOutbound;
+import org.bazar.app.api.GetStorageUrlsOutbound;
 import org.bazar.app.api.InitiateUploadFileInbound;
 import org.bazar.app.api.UnitOfWork;
 import org.bazar.app.impl.commands.InitiateUploadCommand;
@@ -17,19 +17,19 @@ import java.util.UUID;
 public class InitiateUploadFileUseCase implements InitiateUploadFileInbound {
     private final FileRepository fileRepository;
     private final UnitOfWork unitOfWork;
-    private final GetUploadUrlOutbound getUploadUrlOutbound;
+    private final GetStorageUrlsOutbound getStorageUrlsOutbound;
     private final FileMapper fileMapper;
 
     @Override
     public FileInfo execute(InitiateUploadCommand command) {
         return unitOfWork.perform(() -> {
             File file = fileMapper.toDomain(command);
-            file.setFileUuid(UUID.randomUUID().toString());
+            file.setFileUuid(UUID.randomUUID());
             file.setStatus(FileStatus.INIT);
             file.setObjectKey(file.getFileUuid() + "_" + file.getFileName());
             fileRepository.create(file);
 
-            return fileMapper.toOutput(getUploadUrlOutbound.execute(file), file.getFileUuid());
+            return fileMapper.toOutput(getStorageUrlsOutbound.getUploadUrl(file), file.getFileUuid().toString());
         });
     }
 }
