@@ -9,7 +9,8 @@ public interface QuarkusSettingProperties extends ConfigProvider {
 
     interface S3 {
         Bucket bucket();
-        int urlTtl();
+        int uploadUrlTtl();
+        int downloadUrlTtl();
     }
 
     interface Bucket {
@@ -23,6 +24,11 @@ public interface QuarkusSettingProperties extends ConfigProvider {
 
     @Override
     default int getUploadUrlTtl() {
-        return s3().urlTtl();
+        return s3().uploadUrlTtl();
+    }
+
+    @Override
+    default int getDownloadUrlTtl() {
+        return s3().downloadUrlTtl();
     }
 }

@@ -7,6 +7,7 @@ import org.bazar.app.api.FileRepository;
 import org.bazar.domain.File;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Реализация репозитория для работы с файлами
@@ -42,6 +43,17 @@ public class FileRepositoryAdapter implements FileRepository {
                 WHERE f.objectKey = :objectKey
                 """, FileEntity.class)
                 .setParameter("objectKey", objectKey)
+                .getSingleResult()));
+    }
+
+    @Override
+    public Optional<File> findByIdFileUuid(UUID fileUuid) {
+        return Optional.ofNullable(filePersistenceMapper.toDomain(entityManager.createQuery("""
+                SELECT f
+                FROM FileEntity f
+                WHERE f.fileUuid = :fileUuid
+                """, FileEntity.class)
+                .setParameter("fileUuid", fileUuid)
                 .getSingleResult()));
     }
 }
