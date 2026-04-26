@@ -1,4 +1,4 @@
 databaseChangeLog:
   - include:
-      file: 001-create-uploaded-file.sql
+      file: 001-create-file-table.sql
       relativeToChangelogFile: true

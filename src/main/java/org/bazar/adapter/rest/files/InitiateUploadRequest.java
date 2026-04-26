@@ -1,4 +1,10 @@
 package org.bazar.adapter.rest.files;
 
-public record InitiateUploadRequest(String extension) {
+import jakarta.ws.rs.QueryParam;
+
+public record InitiateUploadRequest(
+        @QueryParam("fileName") String fileName,
+        @QueryParam("size") Integer size,
+        @QueryParam("contentType") String contentType,
+        @QueryParam("domain") String domain) {
 }

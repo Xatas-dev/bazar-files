@@ -1,5 +1,8 @@
 package org.bazar.app.api;
 
+import org.bazar.app.impl.commands.InitiateUploadCommand;
+import org.bazar.app.impl.output.FileInfo;
+
 public interface InitiateUploadFileInbound {
-    String execute(String extension);
+    FileInfo execute(InitiateUploadCommand command);
 }
