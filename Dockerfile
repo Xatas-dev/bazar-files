@@ -23,7 +23,7 @@ RUN ./gradlew build -Dquarkus.native.enabled=true -Dquarkus.package.jar.enabled=
 # ==========================================
 # Stage 2: Runtime image for native binary
 # ==========================================
-FROM quay.io/quarkus/quarkus-micro-image:2.0
+FROM quay.io/quarkus/ubi9-quarkus-mandrel-builder-image:jdk-21 AS runtime
 
 WORKDIR /application
 
