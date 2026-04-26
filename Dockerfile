@@ -1,7 +1,7 @@
 # ==========================================
-# Stage 1: Build the Application
+# Stage 1: Build the Application (Native)
 # ==========================================
-FROM gradle:9.2.1-jdk21 AS builder
+FROM ghcr.io/graalvm/native-image:21 AS builder
 
 WORKDIR /app
 
@@ -10,10 +10,7 @@ COPY build.gradle.kts settings.gradle gradle.properties ./
 COPY gradle ./gradle
 
 COPY src ./src
-RUN gradle build -x test --no-daemon
-
-# Extract layers for optimization
-# This splits the fat jar into dependencies, loader, and application code
+RUN gradle build -Dquarkus.package.type=native -x test --no-daemon
 
 # ==========================================
 # Stage 2: Create the Runtime Image
@@ -23,19 +20,13 @@ FROM eclipse-temurin:25-jre-alpine
 WORKDIR /application
 
 # Optimize Java memory usage for containers
-# MaxRAMPercentage=75.0 means the JVM will use 75% of the container's available memory limit (e.g., 384MB of a 512MB container)
 ENV JDK_JAVA_OPTIONS="-XX:MaxRAMPercentage=80.0 -XX:+UseStringDeduplication -XX:MaxHeapFreeRatio=10 -XX:MinHeapFreeRatio=5 -Xss512k"
 
 # Create a non-root user for security (best practice)
 RUN addgroup -S spring && adduser -S spring -G spring && chown -R spring:spring /application
 USER spring:spring
-# пасхалка
-# Copy the layers extracted in Stage 1
-# Order matters: dependencies are least likely to change, application is most likely
-COPY --from=builder /app/build/quarkus-app/lib/ ./
-COPY --from=builder /app/build/quarkus-app/*.jar ./
-COPY --from=builder /app/build/quarkus-app/app/ ./
-COPY --from=builder /app/build/quarkus-app/quarkus/ ./
 
+# Copy native executable
+COPY --from=builder /app/build/*-runner /application/application
 
-ENTRYPOINT ["java", "-jar", "application.jar"]
+ENTRYPOINT ["/application/application"]
