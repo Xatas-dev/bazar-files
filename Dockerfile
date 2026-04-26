@@ -1,41 +1,36 @@
 # ==========================================
-# Stage 1: Build the Application
+# Stage 1: Build the Application (Native)
 # ==========================================
-FROM gradle:9.2.1-jdk21 AS builder
+FROM quay.io/quarkus/ubi9-quarkus-mandrel-builder-image:jdk-21 AS builder
 
 WORKDIR /app
 
-# Copy gradle configuration first to cache dependencies
-COPY build.gradle.kts settings.gradle gradle.properties ./
-COPY gradle ./gradle
+# Elevate privileges only for package install
+USER root
+RUN microdnf install -y findutils gcc glibc-devel zlib-devel && microdnf clean all
+USER quarkus
 
-COPY src ./src
-RUN gradle build -x test --no-daemon
+# Copy Gradle wrapper and build descriptors first for better layer caching
+COPY --chown=quarkus:quarkus build.gradle.kts settings.gradle gradle.properties ./
+COPY --chown=quarkus:quarkus gradle ./gradle
+COPY --chown=quarkus:quarkus gradlew ./
+RUN chmod +x ./gradlew
 
-# Extract layers for optimization
-# This splits the fat jar into dependencies, loader, and application code
+# Copy sources and build native executable
+COPY --chown=quarkus:quarkus src ./src
+RUN ./gradlew build -Dquarkus.native.enabled=true -Dquarkus.package.jar.enabled=false -x test --no-daemon
 
 # ==========================================
-# Stage 2: Create the Runtime Image
+# Stage 2: Runtime image for native binary
 # ==========================================
-FROM eclipse-temurin:25-jre-alpine
+FROM quay.io/quarkus/quarkus-micro-image:2.0
 
 WORKDIR /application
 
-# Optimize Java memory usage for containers
-# MaxRAMPercentage=75.0 means the JVM will use 75% of the container's available memory limit (e.g., 384MB of a 512MB container)
-ENV JDK_JAVA_OPTIONS="-XX:MaxRAMPercentage=80.0 -XX:+UseStringDeduplication -XX:MaxHeapFreeRatio=10 -XX:MinHeapFreeRatio=5 -Xss512k"
+COPY --from=builder /app/build/*-runner /application/application
+RUN chmod 775 /application /application/application
 
-# Create a non-root user for security (best practice)
-RUN addgroup -S spring && adduser -S spring -G spring && chown -R spring:spring /application
-USER spring:spring
-# пасхалка
-# Copy the layers extracted in Stage 1
-# Order matters: dependencies are least likely to change, application is most likely
-COPY --from=builder /app/build/quarkus-app/lib/ ./
-COPY --from=builder /app/build/quarkus-app/*.jar ./
-COPY --from=builder /app/build/quarkus-app/app/ ./
-COPY --from=builder /app/build/quarkus-app/quarkus/ ./
+EXPOSE 8080
+USER 1001
 
-
-ENTRYPOINT ["java", "-jar", "application.jar"]
+ENTRYPOINT ["/application/application"]
