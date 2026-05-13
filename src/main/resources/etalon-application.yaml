@@ -22,6 +22,10 @@ settings:
       files: files
     upload-url-ttl: 3600
     download-url-ttl: 3600
+  scheduler:
+    delete-files:
+      cron: "10s"
+      batch-size: 2
 
 kafka:
   bootstrap:
