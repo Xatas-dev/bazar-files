@@ -68,17 +68,15 @@ public class FileRepositoryAdapter implements FileRepository {
     }
 
     @Override
-    public List<File> findDeletingFilesAfterId(Long lastId, Integer batch) {
+    public List<File> findDeletingFiles(Integer batch) {
         return entityManager.createQuery("""
                         SELECT f
                         FROM FileEntity f
                         WHERE f.status = :status
-                          AND f.id > :lastId
                         ORDER BY f.id
                         """, FileEntity.class
                 )
                 .setParameter("status", FileStatus.DELETING.name())
-                .setParameter("lastId", lastId)
                 .setMaxResults(batch)
                 .getResultList().stream()
                     .map(filePersistenceMapper::toDomain)
