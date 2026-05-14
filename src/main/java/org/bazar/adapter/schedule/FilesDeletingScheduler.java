@@ -16,5 +16,6 @@ public class FilesDeletingScheduler {
     void deleteFiles() {
         log.info("Deleting files...");
         deleteMarkedFilesInbound.execute();
+        log.info("Files deleted");
     }
 }
