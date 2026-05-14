@@ -21,12 +21,15 @@ public class DeleteMarkedFilesUseCase implements DeleteMarkedFilesInbound {
 
     @Override
     public void execute() {
+        Long lastId = 0L;
         while (true) {
-            List<File> batch = fileRepository.findDeletingFiles(configProvider.getDeletingFilesBatchSize());
+            List<File> batch = fileRepository.findDeletingFilesAfterId(lastId, configProvider.getDeletingFilesBatchSize());
             if (batch.isEmpty()) {
                 break;
             }
             batch.forEach(this::deleteSingleFile);
+
+            lastId = batch.getLast().getId();
         }
     }
 

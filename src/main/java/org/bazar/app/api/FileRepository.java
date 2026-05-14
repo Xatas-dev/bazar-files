@@ -23,5 +23,5 @@ public interface FileRepository {
 
     Optional<File> findByFileUuid(UUID fileUuid);
 
-    List<File> findDeletingFiles(Integer batch);
+    List<File> findDeletingFilesAfterId(Long lastId, Integer batch);
 }
