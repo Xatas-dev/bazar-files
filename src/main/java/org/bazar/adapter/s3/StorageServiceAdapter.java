@@ -1,7 +1,7 @@
 package org.bazar.adapter.s3;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import lombok.RequiredArgsConstructor;
+import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.bazar.app.api.ConfigProvider;
 import org.bazar.app.api.StorageService;
@@ -22,12 +22,18 @@ import java.time.Duration;
 import static org.bazar.app.api.exception.ErrorCode.FAILED_TO_DELETE_FILE_FROM_STORAGE;
 
 @ApplicationScoped
-@RequiredArgsConstructor
 @Slf4j
 public class StorageServiceAdapter implements StorageService {
     private final S3Presigner s3Presigner;
     private final ConfigProvider configProvider;
     private final @InternalS3 S3Client s3Client;
+
+    @Inject
+    public StorageServiceAdapter(S3Presigner s3Presigner, ConfigProvider configProvider, @InternalS3 S3Client s3Client) {
+        this.s3Presigner = s3Presigner;
+        this.configProvider = configProvider;
+        this.s3Client = s3Client;
+    }
 
     @Override
     public String getUploadUrl(File file) {
