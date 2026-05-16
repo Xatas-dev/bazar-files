@@ -7,6 +7,7 @@ import org.bazar.app.api.ConfigProvider;
 import org.bazar.app.api.StorageService;
 import org.bazar.app.api.exception.BusinessException;
 import org.bazar.domain.File;
+import org.bazar.fw.InternalS3;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -26,7 +27,7 @@ import static org.bazar.app.api.exception.ErrorCode.FAILED_TO_DELETE_FILE_FROM_S
 public class StorageServiceAdapter implements StorageService {
     private final S3Presigner s3Presigner;
     private final ConfigProvider configProvider;
-    private final S3Client s3Client;
+    private final @InternalS3 S3Client s3Client;
 
     @Override
     public String getUploadUrl(File file) {

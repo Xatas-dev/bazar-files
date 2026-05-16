@@ -14,6 +14,7 @@ quarkus:
 
   s3:
     endpoint-override: ${SYSTEM_S3_ENDPOINT}
+    internal-endpoint: ${SYSTEM_S3_INTERNAL_ENDPOINT}
     path-style-access: true
     aws:
       region: ${SYSTEM_S3_REGION}

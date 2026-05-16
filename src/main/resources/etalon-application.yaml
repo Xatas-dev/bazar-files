@@ -7,6 +7,7 @@ quarkus:
 
   s3:
     endpoint-override: http://localhost:9000
+    internal-endpoint: http://localhost:9000
     path-style-access: true
     aws:
       region: us-east-1
