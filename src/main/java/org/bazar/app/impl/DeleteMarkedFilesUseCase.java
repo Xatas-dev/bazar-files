@@ -39,8 +39,8 @@ public class DeleteMarkedFilesUseCase implements DeleteMarkedFilesInbound {
 
     private void deleteSingleFile(File file) {
         try {
+            storageService.deleteByObjectKey(file.getObjectKey());
             unitOfWork.perform(() -> {
-                storageService.deleteByObjectKey(file.getObjectKey());
                 fileRepository.deleteById(file.getId());
                 return null;
             });
