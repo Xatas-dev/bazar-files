@@ -29,6 +29,10 @@ settings:
       files: ${SETTING_S3_BUCKET_FILES}
     upload-url-ttl: ${SETTING_S3_UPLOAD_URL_TTL}
     download-url-ttl: ${SETTING_S3_DOWNLOAD_URL_TTL}
+  scheduler:
+    delete-files:
+      cron: ${SETTING_SCHEDULER_DELETE_FILES_CRON}
+      batch-size: ${SETTING_SCHEDULER_DELETE_FILES_BATCH_SIZE}
 
 kafka:
   bootstrap:

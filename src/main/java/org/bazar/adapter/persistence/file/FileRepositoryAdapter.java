@@ -5,7 +5,9 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import org.bazar.app.api.FileRepository;
 import org.bazar.domain.File;
+import org.bazar.domain.FileStatus;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,6 +38,14 @@ public class FileRepositoryAdapter implements FileRepository {
     }
 
     @Override
+    public void deleteById(Long id) {
+        entityManager.createQuery("""
+        DELETE FROM FileEntity f
+        WHERE f.id = :id
+        """).setParameter("id", id).executeUpdate();
+    }
+
+    @Override
     public Optional<File> findByObjectKey(String objectKey) {
         return Optional.ofNullable(filePersistenceMapper.toDomain(entityManager.createQuery("""
                 SELECT f
@@ -47,7 +57,7 @@ public class FileRepositoryAdapter implements FileRepository {
     }
 
     @Override
-    public Optional<File> findByIdFileUuid(UUID fileUuid) {
+    public Optional<File> findByFileUuid(UUID fileUuid) {
         return Optional.ofNullable(filePersistenceMapper.toDomain(entityManager.createQuery("""
                 SELECT f
                 FROM FileEntity f
@@ -55,5 +65,23 @@ public class FileRepositoryAdapter implements FileRepository {
                 """, FileEntity.class)
                 .setParameter("fileUuid", fileUuid)
                 .getSingleResult()));
+    }
+
+    @Override
+    public List<File> findDeletingFilesAfterId(Long lastId, Integer batch) {
+        return entityManager.createQuery("""
+                        SELECT f
+                        FROM FileEntity f
+                        WHERE f.status = :status
+                          AND f.id > :lastId
+                        ORDER BY f.id
+                        """, FileEntity.class
+                )
+                .setParameter("status", FileStatus.DELETING.name())
+                .setParameter("lastId", lastId)
+                .setMaxResults(batch)
+                .getResultList().stream()
+                    .map(filePersistenceMapper::toDomain)
+                    .toList();
     }
 }
