@@ -14,7 +14,7 @@ import java.net.URI;
 @ApplicationScoped
 @RequiredArgsConstructor
 public class InternalS3ClientConfig {
-    @ConfigProperty(name = "quarkus.s3.internal-endpoint")
+    @ConfigProperty(name = "settings.s3.internal-endpoint")
     String internalEndpoint;
     @ConfigProperty(name = "quarkus.s3.aws.region")
     String region;

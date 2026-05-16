@@ -7,7 +7,6 @@ quarkus:
 
   s3:
     endpoint-override: http://localhost:9000
-    internal-endpoint: http://localhost:9000
     path-style-access: true
     aws:
       region: us-east-1
@@ -23,6 +22,7 @@ settings:
       files: files
     upload-url-ttl: 3600
     download-url-ttl: 3600
+    internal-endpoint: http://localhost:9000
   scheduler:
     delete-files:
       cron: "10s"

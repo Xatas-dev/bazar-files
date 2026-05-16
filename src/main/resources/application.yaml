@@ -14,7 +14,6 @@ quarkus:
 
   s3:
     endpoint-override: ${SYSTEM_S3_ENDPOINT}
-    internal-endpoint: ${SYSTEM_S3_INTERNAL_ENDPOINT}
     path-style-access: true
     aws:
       region: ${SYSTEM_S3_REGION}
@@ -30,6 +29,7 @@ settings:
       files: ${SETTING_S3_BUCKET_FILES}
     upload-url-ttl: ${SETTING_S3_UPLOAD_URL_TTL}
     download-url-ttl: ${SETTING_S3_DOWNLOAD_URL_TTL}
+    internal-endpoint: ${SYSTEM_S3_INTERNAL_ENDPOINT}
   scheduler:
     delete-files:
       cron: ${SETTING_SCHEDULER_DELETE_FILES_CRON}

@@ -12,6 +12,7 @@ public interface QuarkusSettingProperties extends ConfigProvider {
         Bucket bucket();
         int uploadUrlTtl();
         int downloadUrlTtl();
+        String internalEndpoint();
     }
 
     interface Scheduler {
