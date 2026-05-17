@@ -18,7 +18,7 @@ public class File {
     /**
      * Уникальный идентификатор файла
      */
-    private String id;
+    private Long id;
 
     /**
      * Уникальный идентификатор файла в хранилище

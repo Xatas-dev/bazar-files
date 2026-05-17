@@ -2,26 +2,37 @@ package org.bazar.adapter.s3;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import org.bazar.app.api.ConfigProvider;
-import org.bazar.app.api.GetStorageUrlsOutbound;
+import org.bazar.app.api.StorageService;
+import org.bazar.app.api.exception.BusinessException;
 import org.bazar.domain.File;
+import org.bazar.fw.InternalS3;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.time.Duration;
 
+import static org.bazar.app.api.exception.ErrorCode.FAILED_TO_DELETE_FILE_FROM_STORAGE;
+
 @ApplicationScoped
-public class GetStorageUrlsAdapter implements GetStorageUrlsOutbound {
+@Slf4j
+public class StorageServiceAdapter implements StorageService {
     private final S3Presigner s3Presigner;
     private final ConfigProvider configProvider;
+    private final @InternalS3 S3Client s3Client;
 
     @Inject
-    public GetStorageUrlsAdapter(S3Presigner s3Presigner, ConfigProvider configProvider) {
+    public StorageServiceAdapter(S3Presigner s3Presigner, ConfigProvider configProvider, @InternalS3 S3Client s3Client) {
         this.s3Presigner = s3Presigner;
         this.configProvider = configProvider;
+        this.s3Client = s3Client;
     }
 
     @Override
@@ -50,5 +61,19 @@ public class GetStorageUrlsAdapter implements GetStorageUrlsOutbound {
                 .signatureDuration(Duration.ofSeconds(configProvider.getDownloadUrlTtl()))
                 .build();
         return s3Presigner.presignGetObject(presignRequest).url().toString();
+    }
+
+    @Override
+    public void deleteByObjectKey(String objectKey) {
+        DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                .bucket(configProvider.getFilesBucketName())
+                .key(objectKey)
+                .build();
+
+        try {
+            s3Client.deleteObject(deleteRequest);
+        } catch (S3Exception e) {
+            throw new BusinessException(FAILED_TO_DELETE_FILE_FROM_STORAGE, objectKey);
+        }
     }
 }

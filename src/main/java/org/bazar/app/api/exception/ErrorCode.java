@@ -4,7 +4,8 @@ import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 
 public enum ErrorCode {
-    FILE_NOT_FOUND_BY_FILE_UUID(Response.Status.NOT_FOUND, "File not found with fileUuid: %s");
+    FILE_NOT_FOUND_BY_FILE_UUID(Response.Status.NOT_FOUND, "File not found with fileUuid: %s"),
+    FAILED_TO_DELETE_FILE_FROM_STORAGE(Response.Status.SERVICE_UNAVAILABLE, "Failed to delete file with objectUuid: %s");
 
     @Getter
     private final Response.Status status;

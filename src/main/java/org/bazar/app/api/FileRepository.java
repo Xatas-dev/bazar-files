@@ -2,6 +2,7 @@ package org.bazar.app.api;
 
 import org.bazar.domain.File;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,8 +17,11 @@ public interface FileRepository {
 
     void update(File file);
 
+    void deleteById(Long id);
+
     Optional<File> findByObjectKey(String objectKey);
 
-    Optional<File> findByIdFileUuid(UUID fileUuid);
+    Optional<File> findByFileUuid(UUID fileUuid);
 
+    List<File> findDeletingFilesAfterId(Long lastId, Integer batch);
 }
