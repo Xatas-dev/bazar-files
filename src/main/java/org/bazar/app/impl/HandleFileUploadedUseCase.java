@@ -31,13 +31,15 @@ public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
                 File file = fileRepository.findByObjectKey(command.key())
                         .orElseThrow(() -> new IllegalStateException("File not found for key: " + command.key()));
 
-                List<FileValidationError> fileValidationErrors = validateAndUpdateFile(file);
-                if (!fileValidationErrors.isEmpty()) {
-                    log.warn("Got validation errors {} for file {}", fileValidationErrors, file.getFileUuid());
-                    file.setErrors(fileValidationErrors);
+                ValidationResult validationResult = validateFile(file);
+                file.setSize(validationResult.metadata().getSize());
+                file.setContentType(validationResult.metadata().getContentType());
+                if (validationResult.hasErrors()) {
+                    log.warn("Got validation errors {} for file {}", validationResult.errors, file.getFileUuid());
+                    file.setErrors(validationResult.errors);
                     file.setStatus(FileStatus.VALIDATION_ERROR);
                     fileRepository.update(file);
-                    // Возможно стоит добавить шедуллер на очистку файлов в статусе VALIDATION_ERROR, но пока так
+                    // TODO: Доработать удаление файла (чистить ещё и в БД) - https://grinbog015.atlassian.net/browse/BZR-176
                     storageService.deleteByObjectKey(file.getObjectKey());
                     return new FileProcessingResult(file, true);
                 }
@@ -84,11 +86,10 @@ public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
         }
     }
 
-    private List<FileValidationError> validateAndUpdateFile(File file) {
+    private ValidationResult validateFile(File file) {
         FileMetadata fileMetadata = storageService.getFileMetadata(file);
-        file.setSize(fileMetadata.getSize());
-        file.setContentType(fileMetadata.getContentType());
-        return fileMetadataValidator.validateFileMetadata(fileMetadata);
+        List<FileValidationError> fileValidationErrors = fileMetadataValidator.validateFileMetadata(fileMetadata);
+        return new ValidationResult(fileMetadata, fileValidationErrors);
     }
 
     private void publishEvent(File file) {
@@ -97,6 +98,15 @@ public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
             notifyFileUploadedOutbound.execute(file);
         } catch (Exception e) {
             log.error("Failed to publish Kafka event", e);
+        }
+    }
+
+    private record ValidationResult(
+            FileMetadata metadata,
+            List<FileValidationError> errors
+    ) {
+        public boolean hasErrors() {
+            return !errors.isEmpty();
         }
     }
 }

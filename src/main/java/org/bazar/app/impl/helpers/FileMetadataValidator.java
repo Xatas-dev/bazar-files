@@ -21,8 +21,8 @@ public class FileMetadataValidator {
     public List<FileValidationError> validateFileMetadata(FileMetadata fileMetadata) {
         List<FileValidationError> errors = new ArrayList<>();
 
-        validateSize(fileMetadata.getSize(), errors);
-        validateContentType(fileMetadata, errors);
+        errors.addAll(validateSize(fileMetadata.getSize()));
+        errors.addAll(validateContentType(fileMetadata));
 
         return errors;
     }
@@ -31,28 +31,29 @@ public class FileMetadataValidator {
     // Implementation
     // =================================================================================================================
 
-    private void validateSize(long size, List<FileValidationError> errors) {
+    private List<FileValidationError> validateSize(long size) {
         if (size > configProvider.getMaxFileSize()) {
             String description = configProvider.getErrorMessages().get(ValidationErrorCode.FILE_TOO_LARGE);
-            errors.add(new FileValidationError(ValidationErrorCode.FILE_TOO_LARGE, description));
+            return List.of(new FileValidationError(ValidationErrorCode.FILE_TOO_LARGE, description));
         }
+        return List.of();
     }
 
-    private void validateContentType(FileMetadata fileMetadata, List<FileValidationError> errors) {
+    private List<FileValidationError> validateContentType(FileMetadata fileMetadata) {
         try {
             List<String> extensions =
                     MimeTypes.getDefaultMimeTypes().forName(fileMetadata.getContentType()).getExtensions();
-            for (String extension : extensions) {
-                if (configProvider.getNotAllowedExtensions().contains(extension)) {
-                    String description = configProvider.getErrorMessages().get(ValidationErrorCode.FILE_TOO_LARGE);
-                    errors.add(new FileValidationError(ValidationErrorCode.FILE_EXTENSION_NOT_ALLOWED, description));
-                }
-            }
+
+            return extensions.stream()
+                    .filter(extension -> configProvider.getNotAllowedExtensions().contains(extension))
+                    .map(extension -> new FileValidationError(ValidationErrorCode.FILE_EXTENSION_NOT_ALLOWED,
+                            configProvider.getErrorMessages().get(ValidationErrorCode.FILE_EXTENSION_NOT_ALLOWED)
+                    ))
+                    .toList();
         } catch (MimeTypeException e) {
             log.error("Failed to validate contentType of {} file", fileMetadata.getObjectKey(), e);
             throw new TechnicalException(
-                    String.format("Failed to validate contentType of %s file", fileMetadata.getObjectKey())
-            );
+                        String.format("Failed to validate contentType of %s file", fileMetadata.getObjectKey()));
         }
     }
 }
