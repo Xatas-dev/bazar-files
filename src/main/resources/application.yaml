@@ -1,4 +1,5 @@
 quarkus:
+  profile: file_validation
   datasource:
     db-kind: postgresql
     username: ${SYSTEM_DB_USERNAME}
@@ -34,6 +35,9 @@ settings:
     delete-files:
       cron: ${SETTING_SCHEDULER_DELETE_FILES_CRON}
       batch-size: ${SETTING_SCHEDULER_DELETE_FILES_BATCH_SIZE}
+  file-validation:
+    max-file-size: ${SETTING_MAX_FILE_SIZE}
+    not-allowed-extensions: ${SETTING_NOT_ALLOWED_EXTENSIONS}
 
 kafka:
   bootstrap:

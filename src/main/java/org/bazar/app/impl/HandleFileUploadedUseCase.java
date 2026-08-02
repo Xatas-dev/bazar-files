@@ -2,15 +2,16 @@ package org.bazar.app.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bazar.app.api.FileRepository;
-import org.bazar.app.api.HandleFileUploadedInbound;
-import org.bazar.app.api.NotifyFileUploadedOutbound;
-import org.bazar.app.api.UnitOfWork;
+import org.bazar.app.api.*;
 import org.bazar.app.impl.commands.HandleFileUploadedCommand;
-import org.bazar.app.impl.output.ProcessResult;
+import org.bazar.app.impl.helpers.FileMetadataValidator;
+import org.bazar.app.impl.output.FileProcessingResult;
 import org.bazar.domain.File;
+import org.bazar.domain.FileMetadata;
 import org.bazar.domain.FileStatus;
+import org.bazar.domain.FileValidationError;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -19,27 +20,41 @@ public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
     private final FileRepository fileRepository;
     private final UnitOfWork unitOfWork;
     private final NotifyFileUploadedOutbound notifyFileUploadedOutbound;
+    private final StorageService storageService;
+    private final FileMetadataValidator fileMetadataValidator;
 
     @Override
-    public void execute(HandleFileUploadedCommand command, String eventName) {
-        ProcessResult result;
+    public void execute(HandleFileUploadedCommand command) {
+        FileProcessingResult result;
         try {
             result = unitOfWork.perform(() -> {
                 File file = fileRepository.findByObjectKey(command.key())
                         .orElseThrow(() -> new IllegalStateException("File not found for key: " + command.key()));
 
-                boolean statusChanged = file.getStatus() != FileStatus.UPLOADED;
-                if (statusChanged) {
-                    file.setStatus(FileStatus.UPLOADED);
+                List<FileValidationError> fileValidationErrors = validateAndUpdateFile(file);
+                if (!fileValidationErrors.isEmpty()) {
+                    log.warn("Got validation errors {} for file {}", fileValidationErrors, file.getFileUuid());
+                    file.setErrors(fileValidationErrors);
+                    file.setStatus(FileStatus.VALIDATION_ERROR);
                     fileRepository.update(file);
+                    // Возможно стоит добавить шедуллер на очистку файлов в статусе VALIDATION_ERROR, но пока так
+                    storageService.deleteByObjectKey(file.getObjectKey());
+                    return new FileProcessingResult(file, true);
                 }
 
-                return ProcessResult.success(file, statusChanged);
+                if (file.getStatus() == FileStatus.UPLOADED) {
+                    return new FileProcessingResult(file, false);
+                }
+
+                file.setStatus(FileStatus.UPLOADED);
+                fileRepository.update(file);
+
+                return new FileProcessingResult(file, true);
             });
         } catch (Exception e) {
             log.error("Failed to process file upload", e);
-            File errorFile = markAsErrorIfExists(command);
-            result = ProcessResult.fail(errorFile);
+            Optional<File> errorFile = markAsErrorIfExists(command.key());
+            result = new FileProcessingResult(errorFile.orElse(null), false);
         }
 
         if (result.shouldPublish()) {
@@ -51,22 +66,29 @@ public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
     // Implementation
     // =================================================================================================================
 
-    private File markAsErrorIfExists(HandleFileUploadedCommand command) {
+    private Optional<File> markAsErrorIfExists(String objectKey) {
         try {
             return unitOfWork.perform(() -> {
-                Optional<File> optionalFile = fileRepository.findByObjectKey(command.key());
+                Optional<File> optionalFile = fileRepository.findByObjectKey(objectKey);
 
                 optionalFile.ifPresent(file -> {
                     file.setStatus(FileStatus.ERROR);
                     fileRepository.update(file);
                 });
 
-                return optionalFile.orElse(null);
+                return optionalFile;
             });
         } catch (Exception ex) {
             log.error("Failed to mark file as ERROR", ex);
-            return null;
+            return Optional.empty();
         }
+    }
+
+    private List<FileValidationError> validateAndUpdateFile(File file) {
+        FileMetadata fileMetadata = storageService.getFileMetadata(file);
+        file.setSize(fileMetadata.getSize());
+        file.setContentType(fileMetadata.getContentType());
+        return fileMetadataValidator.validateFileMetadata(fileMetadata);
     }
 
     private void publishEvent(File file) {
