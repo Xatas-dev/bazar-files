@@ -54,7 +54,7 @@ public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
         } catch (Exception e) {
             log.error("Failed to process file upload", e);
             Optional<File> errorFile = markAsErrorIfExists(command.key());
-            result = new FileProcessingResult(errorFile.orElse(null), false);
+            result = new FileProcessingResult(errorFile.orElse(null), errorFile.isPresent());
         }
 
         if (result.shouldPublish()) {
