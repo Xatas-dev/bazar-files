@@ -4,5 +4,6 @@ public enum FileStatus {
     INIT,
     UPLOADED,
     DELETING,
-    ERROR
+    ERROR,
+    VALIDATION_ERROR
 }

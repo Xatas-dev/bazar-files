@@ -12,10 +12,11 @@ import org.bazar.app.impl.HandleFileUploadedUseCase;
 import org.bazar.app.impl.InitiateDownloadFileUseCase;
 import org.bazar.app.impl.InitiateUploadFileUseCase;
 import org.bazar.app.impl.MarkFileForDeletionUseCase;
+import org.bazar.app.impl.helpers.FileMetadataValidator;
 import org.bazar.app.impl.mapper.FileMapper;
 
 @Singleton
-public class UseCaseProducer {
+public class BeanProducer {
     @Produces
     @Singleton
     InitiateUploadFileUseCase initiateUploadFileUseCase(FileRepository fileRepository, UnitOfWork unitOfWork,
@@ -25,8 +26,10 @@ public class UseCaseProducer {
 
     @Produces
     @Singleton
-    HandleFileUploadedUseCase handleFileUploadedUseCase(FileRepository fileRepository, UnitOfWork unitOfWork, NotifyFileUploadedOutbound notifyFileUploadedOutbound) {
-        return new HandleFileUploadedUseCase(fileRepository, unitOfWork, notifyFileUploadedOutbound);
+    HandleFileUploadedUseCase handleFileUploadedUseCase(FileRepository fileRepository, UnitOfWork unitOfWork,
+                                                        NotifyFileUploadedOutbound notifyFileUploadedOutbound,
+                                                        StorageService storageService, FileMetadataValidator validator) {
+        return new HandleFileUploadedUseCase(fileRepository, unitOfWork, notifyFileUploadedOutbound, storageService, validator);
     }
 
     @Produces
@@ -46,5 +49,11 @@ public class UseCaseProducer {
     DeleteMarkedFilesUseCase deleteMarkedFilesUseCase(FileRepository fileRepository, UnitOfWork unitOfWork,
                                                       StorageService storageService, ConfigProvider configProvider) {
         return new DeleteMarkedFilesUseCase(fileRepository, unitOfWork, storageService, configProvider);
+    }
+
+    @Produces
+    @Singleton
+    FileMetadataValidator fileMetadataValidator(ConfigProvider configProvider) {
+        return new FileMetadataValidator(configProvider);
     }
 }
