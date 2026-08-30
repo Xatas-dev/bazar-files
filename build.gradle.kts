@@ -29,6 +29,7 @@ dependencies {
     implementation("io.quarkus:quarkus-scheduler:3.35.2")
     implementation("io.quarkiverse.amazonservices:quarkus-amazon-s3:2.16.12.Final")
     implementation("software.amazon.awssdk:url-connection-client")
+    implementation("org.apache.tika:tika-core:3.2.3")
     compileOnly("org.projectlombok:lombok:1.18.32")
     annotationProcessor("org.projectlombok:lombok:1.18.32")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
@@ -39,7 +40,7 @@ dependencies {
 }
 
 group = "org.bazar"
-version = "1.0.0"
+version = "1.0.1"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21

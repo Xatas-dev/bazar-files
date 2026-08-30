@@ -1,0 +1,5 @@
+settings:
+  file-validation:
+    error-messages:
+      FILE_TOO_LARGE: "file size exceeds 500 MB"
+      FILE_EXTENSION_NOT_ALLOWED: "file extension not allowed"

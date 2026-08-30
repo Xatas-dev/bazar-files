@@ -29,7 +29,7 @@ public class WebHookResource {
         try {
             if (CREATED_PUT_EVENT_NAME.equals(event.eventName())) {
                 HandleFileUploadedCommand command = restS3Mapper.toDomain(event.records().getFirst().s3().object());
-                handleFileUploadedInbound.execute(command, event.eventName());
+                handleFileUploadedInbound.execute(command);
             }
         } catch (Exception e) {
             log.error("Error handling file uploaded event", e);

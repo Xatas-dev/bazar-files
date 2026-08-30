@@ -6,7 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.retries.StandardRetryStrategy;
+import software.amazon.awssdk.retries.api.RetryStrategy;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import java.net.URI;
@@ -27,6 +30,9 @@ public class InternalS3ClientConfig {
     @ApplicationScoped
     @InternalS3
     public S3Client internalS3Client() {
+        RetryStrategy retryStrategy = StandardRetryStrategy.builder()
+                .maxAttempts(3)
+                .build();
         return S3Client.builder()
                 .endpointOverride(URI.create(internalEndpoint))
                 .region(Region.of(region))
@@ -36,6 +42,11 @@ public class InternalS3ClientConfig {
                         )
                 )
                 .forcePathStyle(true)
+                .overrideConfiguration(
+                        ClientOverrideConfiguration.builder()
+                                .retryStrategy(retryStrategy)
+                                .build()
+                )
                 .build();
     }
 }

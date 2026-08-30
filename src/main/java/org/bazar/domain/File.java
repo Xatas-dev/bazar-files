@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -53,4 +54,9 @@ public class File {
      * Статус файла
      */
     private FileStatus status;
+
+    /**
+     * Ошибки валидации файла
+     */
+    private List<FileValidationError> errors;
 }

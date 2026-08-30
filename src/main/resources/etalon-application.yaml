@@ -27,6 +27,9 @@ settings:
     delete-files:
       cron: "10s"
       batch-size: 2
+  file-validation:
+    max-file-size: 20000
+    not-allowed-extensions: [exe, sh, bat, msi, bin, ps1, hta]
 
 kafka:
   bootstrap:
