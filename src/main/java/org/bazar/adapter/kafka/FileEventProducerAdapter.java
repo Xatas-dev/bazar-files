@@ -3,7 +3,7 @@ package org.bazar.adapter.kafka;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bazar.app.api.NotifyFileUploadedOutbound;
-import org.bazar.domain.File;
+import org.bazar.domain.file.File;
 
 @ApplicationScoped
 public class FileEventProducerAdapter implements NotifyFileUploadedOutbound {

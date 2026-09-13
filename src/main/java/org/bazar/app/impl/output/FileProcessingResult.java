@@ -1,6 +1,6 @@
 package org.bazar.app.impl.output;
 
-import org.bazar.domain.File;
+import org.bazar.domain.file.File;
 
 /**
  * Результат обработки загруженного файла

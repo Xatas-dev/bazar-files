@@ -1,6 +1,6 @@
 package org.bazar.adapter.persistence.file;
 
-import org.bazar.domain.File;
+import org.bazar.domain.file.File;
 import org.mapstruct.Mapper;
 
 /**

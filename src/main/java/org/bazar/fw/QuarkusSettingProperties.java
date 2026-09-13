@@ -2,7 +2,7 @@ package org.bazar.fw;
 
 import io.smallrye.config.ConfigMapping;
 import org.bazar.app.api.ConfigProvider;
-import org.bazar.domain.ValidationErrorCode;
+import org.bazar.domain.file.ValidationErrorCode;
 
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package org.bazar.app.api;
 
-import org.bazar.domain.ValidationErrorCode;
+import org.bazar.domain.file.ValidationErrorCode;
 
 import java.util.List;
 import java.util.Map;

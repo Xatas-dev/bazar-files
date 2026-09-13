@@ -1,7 +1,7 @@
 package org.bazar.adapter.kafka;
 
 import org.bazar.adapter.kafka.message.FileEventOut;
-import org.bazar.domain.File;
+import org.bazar.domain.file.File;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "jakarta")
