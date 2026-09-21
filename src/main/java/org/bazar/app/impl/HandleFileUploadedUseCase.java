@@ -75,8 +75,6 @@ public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
                     fileRepository.update(file);
                     outboxService.saveFileEvent(file);
                 });
-
-                return;
             });
         } catch (Exception ex) {
             log.error("Failed to mark file as ERROR", ex);

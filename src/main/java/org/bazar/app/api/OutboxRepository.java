@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface OutboxRepository {
     List<OutboxEvent> findByStatus(OutboxEventStatus status);
+
+    void save(OutboxEvent event);
 }

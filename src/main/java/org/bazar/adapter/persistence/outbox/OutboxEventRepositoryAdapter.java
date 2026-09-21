@@ -24,4 +24,10 @@ public class OutboxEventRepositoryAdapter implements OutboxRepository {
                 .getResultList();
         return outboxEventPersistenceMapper.toDomain(resultList);
     }
+
+    @Override
+    public void save(OutboxEvent event) {
+        OutboxEventEntity entity = outboxEventPersistenceMapper.toEntity(event);
+        entityManager.persist(entity);
+    }
 }

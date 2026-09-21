@@ -10,4 +10,6 @@ public interface OutboxEventPersistenceMapper {
     List<OutboxEvent> toDomain(List<OutboxEventEntity> entity);
 
     OutboxEvent toDomain(OutboxEventEntity entity);
+
+    OutboxEventEntity toEntity(OutboxEvent domain);
 }
