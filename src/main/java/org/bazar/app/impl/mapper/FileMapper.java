@@ -1,6 +1,7 @@
 package org.bazar.app.impl.mapper;
 
 import org.bazar.app.impl.commands.InitiateUploadCommand;
+import org.bazar.app.impl.output.FileEventOut;
 import org.bazar.app.impl.output.FileInfo;
 import org.bazar.domain.file.File;
 import org.mapstruct.Mapper;
@@ -9,4 +10,5 @@ import org.mapstruct.Mapper;
 public interface FileMapper {
     File toDomain(InitiateUploadCommand command);
     FileInfo toOutput(String presignedUrl, String fileUuid);
+    FileEventOut toOutput(File file);
 }

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.bazar.app.api.OutboxRepository;
 import org.bazar.app.api.OutboxService;
 import org.bazar.app.impl.mapper.OutboxMapper;
-import org.bazar.domain.file.File;
+import org.bazar.app.impl.output.FileEventOut;
 import org.bazar.domain.outbox.OutboxEvent;
 
 @ApplicationScoped
@@ -15,7 +15,7 @@ public class OutboxServiceImpl implements OutboxService {
     private final OutboxMapper outboxMapper;
 
     @Override
-    public void saveFileEvent(File file) {
+    public void saveFileEvent(FileEventOut file) {
         OutboxEvent fileEvent = outboxMapper.toPendingFileEvent(file);
         outboxRepository.save(fileEvent);
     }

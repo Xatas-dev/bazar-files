@@ -6,7 +6,9 @@ import org.bazar.domain.outbox.OutboxEventStatus;
 import java.util.List;
 
 public interface OutboxRepository {
-    List<OutboxEvent> findByStatus(OutboxEventStatus status);
+    List<OutboxEvent> findByStatus(OutboxEventStatus status, Integer batchSize);
 
     void save(OutboxEvent event);
+
+    void update(OutboxEvent event);
 }

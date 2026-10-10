@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS outbox_event (
     message JSONB NOT NULL,
     retry_count INTEGER,
     last_error TEXT,
-    sent_at timestamp with time zone,
-    created_at timestamp with time zone not null default now(),
-    updated_at timestamp with time zone not null default now()
+    sent_at TIMESTAMP WITH TIME ZONE,
+    next_attempt_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );

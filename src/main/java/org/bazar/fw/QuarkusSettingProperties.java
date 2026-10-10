@@ -26,8 +26,14 @@ public interface QuarkusSettingProperties extends ConfigProvider {
 
     interface Scheduler {
         DeleteFiles deleteFiles();
+        SendOutboxEvents sendOutboxEvents();
 
         interface DeleteFiles {
+            String cron();
+            Integer batchSize();
+        }
+
+        interface SendOutboxEvents {
             String cron();
             Integer batchSize();
         }
@@ -57,6 +63,11 @@ public interface QuarkusSettingProperties extends ConfigProvider {
     @Override
     default int getDeletingFilesBatchSize() {
         return scheduler().deleteFiles().batchSize();
+    }
+
+    @Override
+    default int getSendingOutboxEventsBatchSize() {
+        return scheduler().sendOutboxEvents().batchSize();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.bazar.app.api;
 
-import org.bazar.domain.file.File;
+import org.bazar.app.impl.output.FileEventOut;
 
 public interface OutboxService {
-    void saveFileEvent(File file);
+    void saveFileEvent(FileEventOut file);
 }

@@ -10,6 +10,7 @@ public interface ConfigProvider {
     int getUploadUrlTtl();
     int getDownloadUrlTtl();
     int getDeletingFilesBatchSize();
+    int getSendingOutboxEventsBatchSize();
     long getMaxFileSize();
     List<String> getNotAllowedExtensions();
     Map<ValidationErrorCode, String> getErrorMessages();

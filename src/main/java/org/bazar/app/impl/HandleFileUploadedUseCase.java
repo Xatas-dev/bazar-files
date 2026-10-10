@@ -9,6 +9,7 @@ import org.bazar.app.api.StorageService;
 import org.bazar.app.api.UnitOfWork;
 import org.bazar.app.impl.commands.HandleFileUploadedCommand;
 import org.bazar.app.impl.helpers.FileMetadataValidator;
+import org.bazar.app.impl.mapper.FileMapper;
 import org.bazar.domain.file.File;
 import org.bazar.domain.file.FileMetadata;
 import org.bazar.domain.file.FileStatus;
@@ -25,6 +26,7 @@ public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
     private final OutboxService outboxService;
     private final StorageService storageService;
     private final FileMetadataValidator fileMetadataValidator;
+    private final FileMapper fileMapper;
 
     @Override
     public void execute(HandleFileUploadedCommand command) {
@@ -46,14 +48,15 @@ public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
                     file.setStatus(FileStatus.VALIDATION_ERROR);
                     fileRepository.update(file);
                     // TODO: Доработать удаление файла (чистить ещё и в БД) - https://grinbog015.atlassian.net/browse/BZR-176
+                    // И не удалять сразу здесь, а делать это в отдельном процессе, чтобы не нарушать согласованность данных (S3 и наша БД)
                     storageService.deleteByObjectKey(file.getObjectKey());
-                    outboxService.saveFileEvent(file);
+                    outboxService.saveFileEvent(fileMapper.toOutput(file));
                     return;
                 }
 
                 file.setStatus(FileStatus.UPLOADED);
                 fileRepository.update(file);
-                outboxService.saveFileEvent(file);
+                outboxService.saveFileEvent(fileMapper.toOutput(file));
             });
         } catch (Exception e) {
             log.error("Failed to process file upload", e);
@@ -73,7 +76,7 @@ public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
                 optionalFile.ifPresent(file -> {
                     file.setStatus(FileStatus.ERROR);
                     fileRepository.update(file);
-                    outboxService.saveFileEvent(file);
+                    outboxService.saveFileEvent(fileMapper.toOutput(file));
                 });
             });
         } catch (Exception ex) {

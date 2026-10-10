@@ -6,6 +6,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.bazar.adapter.persistence.DomainObject;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 
@@ -21,6 +23,7 @@ public class OutboxEventEntity extends DomainObject {
     private String status;
 
     @Column(name = "message", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String message;
 
     @Column(name = "retry_count")
@@ -31,4 +34,7 @@ public class OutboxEventEntity extends DomainObject {
 
     @Column(name = "sent_at")
     private Instant sentAt;
+
+    @Column(name = "next_attempt_at")
+    private Instant nextAttemptAt;
 }
