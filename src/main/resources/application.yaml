@@ -41,6 +41,8 @@ settings:
   file-validation:
     max-file-size: ${SETTING_MAX_FILE_SIZE}
     not-allowed-extensions: ${SETTING_NOT_ALLOWED_EXTENSIONS}
+  outbox:
+    max-retry-count: ${SETTING_OUTBOX_MAX_RETRY_COUNT}
 
 kafka:
   bootstrap:

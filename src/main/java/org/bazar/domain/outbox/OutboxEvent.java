@@ -16,8 +16,6 @@ import static org.bazar.domain.outbox.OutboxEventStatus.SENT;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OutboxEvent {
-    private static final int MAX_RETRY_COUNT = 5;
-
     private Long id;
     private String topic;
     private OutboxEventStatus status;
@@ -34,11 +32,11 @@ public class OutboxEvent {
         status = SENT;
     }
 
-    public void markAsSendFailed(String errorMessage) {
+    public void markAsSendFailed(String errorMessage, int maxRetryCount) {
         lastError = errorMessage;
         retryCount++;
 
-        if (retryCount >= MAX_RETRY_COUNT) {
+        if (retryCount >= maxRetryCount) {
             status = FAILED;
             return;
         }

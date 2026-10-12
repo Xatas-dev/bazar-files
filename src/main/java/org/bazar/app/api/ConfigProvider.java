@@ -14,4 +14,5 @@ public interface ConfigProvider {
     long getMaxFileSize();
     List<String> getNotAllowedExtensions();
     Map<ValidationErrorCode, String> getErrorMessages();
+    int getOutboxMaxRetryCount();
 }

@@ -12,6 +12,7 @@ public interface QuarkusSettingProperties extends ConfigProvider {
     S3 s3();
     Scheduler scheduler();
     FileValidation fileValidation();
+    Outbox outbox();
 
     interface S3 {
         Bucket bucket();
@@ -43,6 +44,10 @@ public interface QuarkusSettingProperties extends ConfigProvider {
         long maxFileSize();
         List<String> notAllowedExtensions();
         Map<ValidationErrorCode, String> errorMessages();
+    }
+
+    interface Outbox {
+        int maxRetryCount();
     }
 
     @Override
@@ -83,5 +88,10 @@ public interface QuarkusSettingProperties extends ConfigProvider {
     @Override
     default Map<ValidationErrorCode, String> getErrorMessages() {
         return fileValidation().errorMessages();
+    }
+
+    @Override
+    default int getOutboxMaxRetryCount() {
+        return outbox().maxRetryCount();
     }
 }

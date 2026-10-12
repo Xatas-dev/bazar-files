@@ -2,6 +2,6 @@ package org.bazar.app.api;
 
 import org.bazar.app.impl.output.FileEventOut;
 
-public interface OutboxService {
+public interface EventService {
     void saveFileEvent(FileEventOut file);
 }

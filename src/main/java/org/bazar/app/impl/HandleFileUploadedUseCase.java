@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bazar.app.api.FileRepository;
 import org.bazar.app.api.HandleFileUploadedInbound;
-import org.bazar.app.api.OutboxService;
+import org.bazar.app.api.EventService;
 import org.bazar.app.api.StorageService;
 import org.bazar.app.api.UnitOfWork;
 import org.bazar.app.impl.commands.HandleFileUploadedCommand;
@@ -23,7 +23,7 @@ import java.util.Optional;
 public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
     private final FileRepository fileRepository;
     private final UnitOfWork unitOfWork;
-    private final OutboxService outboxService;
+    private final EventService eventService;
     private final StorageService storageService;
     private final FileMetadataValidator fileMetadataValidator;
     private final FileMapper fileMapper;
@@ -50,13 +50,11 @@ public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
                     // TODO: Доработать удаление файла (чистить ещё и в БД) - https://grinbog015.atlassian.net/browse/BZR-176
                     // И не удалять сразу здесь, а делать это в отдельном процессе, чтобы не нарушать согласованность данных (S3 и наша БД)
                     storageService.deleteByObjectKey(file.getObjectKey());
-                    outboxService.saveFileEvent(fileMapper.toOutput(file));
-                    return;
+                } else {
+                    file.setStatus(FileStatus.UPLOADED);
+                    fileRepository.update(file);
                 }
-
-                file.setStatus(FileStatus.UPLOADED);
-                fileRepository.update(file);
-                outboxService.saveFileEvent(fileMapper.toOutput(file));
+                eventService.saveFileEvent(fileMapper.toOutput(file));
             });
         } catch (Exception e) {
             log.error("Failed to process file upload", e);
@@ -76,7 +74,7 @@ public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
                 optionalFile.ifPresent(file -> {
                     file.setStatus(FileStatus.ERROR);
                     fileRepository.update(file);
-                    outboxService.saveFileEvent(fileMapper.toOutput(file));
+                    eventService.saveFileEvent(fileMapper.toOutput(file));
                 });
             });
         } catch (Exception ex) {

@@ -6,8 +6,8 @@ import jakarta.inject.Singleton;
 import org.bazar.app.api.ConfigProvider;
 import org.bazar.app.api.FileRepository;
 import org.bazar.app.api.OutboxRepository;
-import org.bazar.app.api.OutboxService;
-import org.bazar.app.api.SendOutBoxEventOutbound;
+import org.bazar.app.api.EventService;
+import org.bazar.app.api.SendOutboxEventOutbound;
 import org.bazar.app.api.StorageService;
 import org.bazar.app.api.UnitOfWork;
 import org.bazar.app.impl.DeleteMarkedFilesUseCase;
@@ -32,9 +32,9 @@ public class BeanProducer {
     @Produces
     @Singleton
     HandleFileUploadedUseCase handleFileUploadedUseCase(FileRepository fileRepository, UnitOfWork unitOfWork,
-                                                        OutboxService outboxService, StorageService storageService,
+                                                        EventService eventService, StorageService storageService,
                                                         FileMetadataValidator validator, FileMapper fileMapper) {
-        return new HandleFileUploadedUseCase(fileRepository, unitOfWork, outboxService, storageService, validator, fileMapper);
+        return new HandleFileUploadedUseCase(fileRepository, unitOfWork, eventService, storageService, validator, fileMapper);
     }
 
     @Produces
@@ -64,7 +64,7 @@ public class BeanProducer {
 
     @Produces
     @Singleton
-    SendOutboxEventsUseCase sendOutboxEventsUseCase(OutboxRepository outboxRepository, SendOutBoxEventOutbound sendOutBoxEventOutbound,
+    SendOutboxEventsUseCase sendOutboxEventsUseCase(OutboxRepository outboxRepository, SendOutboxEventOutbound sendOutBoxEventOutbound,
                                                     ConfigProvider configProvider, UnitOfWork unitOfWork) {
         return new SendOutboxEventsUseCase(outboxRepository, sendOutBoxEventOutbound, configProvider, unitOfWork);
     }
