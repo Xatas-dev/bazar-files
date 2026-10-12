@@ -1,6 +1,6 @@
 package org.bazar.app.api;
 
-import org.bazar.domain.File;
+import org.bazar.domain.file.File;
 
 import java.util.List;
 import java.util.Optional;

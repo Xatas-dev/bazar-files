@@ -2,7 +2,7 @@ package org.bazar.fw;
 
 import io.smallrye.config.ConfigMapping;
 import org.bazar.app.api.ConfigProvider;
-import org.bazar.domain.ValidationErrorCode;
+import org.bazar.domain.file.ValidationErrorCode;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +12,7 @@ public interface QuarkusSettingProperties extends ConfigProvider {
     S3 s3();
     Scheduler scheduler();
     FileValidation fileValidation();
+    Outbox outbox();
 
     interface S3 {
         Bucket bucket();
@@ -26,8 +27,14 @@ public interface QuarkusSettingProperties extends ConfigProvider {
 
     interface Scheduler {
         DeleteFiles deleteFiles();
+        SendOutboxEvents sendOutboxEvents();
 
         interface DeleteFiles {
+            String cron();
+            Integer batchSize();
+        }
+
+        interface SendOutboxEvents {
             String cron();
             Integer batchSize();
         }
@@ -37,6 +44,10 @@ public interface QuarkusSettingProperties extends ConfigProvider {
         long maxFileSize();
         List<String> notAllowedExtensions();
         Map<ValidationErrorCode, String> errorMessages();
+    }
+
+    interface Outbox {
+        int maxRetryCount();
     }
 
     @Override
@@ -60,6 +71,11 @@ public interface QuarkusSettingProperties extends ConfigProvider {
     }
 
     @Override
+    default int getSendingOutboxEventsBatchSize() {
+        return scheduler().sendOutboxEvents().batchSize();
+    }
+
+    @Override
     default long getMaxFileSize() {
         return fileValidation().maxFileSize();
     }
@@ -72,5 +88,10 @@ public interface QuarkusSettingProperties extends ConfigProvider {
     @Override
     default Map<ValidationErrorCode, String> getErrorMessages() {
         return fileValidation().errorMessages();
+    }
+
+    @Override
+    default int getOutboxMaxRetryCount() {
+        return outbox().maxRetryCount();
     }
 }

@@ -1,11 +1,11 @@
 package org.bazar.adapter.persistence.file;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.bazar.app.api.FileRepository;
-import org.bazar.domain.File;
-import org.bazar.domain.FileStatus;
+import org.bazar.domain.file.File;
+import org.bazar.domain.file.FileStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,15 +15,10 @@ import java.util.UUID;
  * Реализация репозитория для работы с файлами
  */
 @ApplicationScoped
+@RequiredArgsConstructor
 public class FileRepositoryAdapter implements FileRepository {
     private final EntityManager entityManager;
     private final FilePersistenceMapper filePersistenceMapper;
-
-    @Inject
-    public FileRepositoryAdapter(EntityManager entityManager, FilePersistenceMapper filePersistenceMapper) {
-        this.entityManager = entityManager;
-        this.filePersistenceMapper = filePersistenceMapper;
-    }
 
     @Override
     public void create(File file) {

@@ -6,9 +6,9 @@ import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 import org.bazar.app.api.ConfigProvider;
 import org.bazar.app.api.exception.TechnicalException;
-import org.bazar.domain.FileMetadata;
-import org.bazar.domain.FileValidationError;
-import org.bazar.domain.ValidationErrorCode;
+import org.bazar.domain.file.FileMetadata;
+import org.bazar.domain.file.FileValidationError;
+import org.bazar.domain.file.ValidationErrorCode;
 
 import java.util.ArrayList;
 import java.util.List;

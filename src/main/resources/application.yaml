@@ -35,9 +35,14 @@ settings:
     delete-files:
       cron: ${SETTING_SCHEDULER_DELETE_FILES_CRON}
       batch-size: ${SETTING_SCHEDULER_DELETE_FILES_BATCH_SIZE}
+    send-outbox-events:
+      cron: ${SETTING_SCHEDULER_SEND_OUTBOX_EVENTS_CRON}
+      batch-size: ${SETTING_SCHEDULER_SEND_OUTBOX_EVENTS_BATCH_SIZE}
   file-validation:
     max-file-size: ${SETTING_MAX_FILE_SIZE}
     not-allowed-extensions: ${SETTING_NOT_ALLOWED_EXTENSIONS}
+  outbox:
+    max-retry-count: ${SETTING_OUTBOX_MAX_RETRY_COUNT}
 
 kafka:
   bootstrap:
@@ -46,10 +51,17 @@ kafka:
 mp:
   messaging:
     outgoing:
-      file.events:
+      outbox-events:
         connector: smallrye-kafka
-        topic: file.events
         bootstrap:
           servers: ${INTEGRATION_KAFKA_BOOTSTRAP_SERVERS}
         value:
-          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+          serializer: org.apache.kafka.common.serialization.StringSerializer
+        delivery:
+          timeout:
+            ms: 7000
+        request:
+          timeout:
+            ms: 5000
+        linger:
+          ms: 0

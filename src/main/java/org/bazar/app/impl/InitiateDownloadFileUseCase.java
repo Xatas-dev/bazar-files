@@ -7,7 +7,7 @@ import org.bazar.app.api.InitiateDownloadFileInbound;
 import org.bazar.app.api.exception.BusinessException;
 import org.bazar.app.api.exception.ErrorCode;
 import org.bazar.app.impl.commands.InitiateDownloadCommand;
-import org.bazar.domain.File;
+import org.bazar.domain.file.File;
 
 @RequiredArgsConstructor
 public class InitiateDownloadFileUseCase implements InitiateDownloadFileInbound {

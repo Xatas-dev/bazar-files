@@ -1,4 +1,4 @@
-package org.bazar.domain;
+package org.bazar.domain.file;
 
 import lombok.Getter;
 import lombok.Setter;

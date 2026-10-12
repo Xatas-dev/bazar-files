@@ -7,7 +7,7 @@ import org.bazar.app.api.DeleteMarkedFilesInbound;
 import org.bazar.app.api.FileRepository;
 import org.bazar.app.api.StorageService;
 import org.bazar.app.api.UnitOfWork;
-import org.bazar.domain.File;
+import org.bazar.domain.file.File;
 
 import java.util.List;
 
@@ -40,10 +40,7 @@ public class DeleteMarkedFilesUseCase implements DeleteMarkedFilesInbound {
     private void deleteSingleFile(File file) {
         try {
             storageService.deleteByObjectKey(file.getObjectKey());
-            unitOfWork.perform(() -> {
-                fileRepository.deleteById(file.getId());
-                return null;
-            });
+            unitOfWork.perform(() -> fileRepository.deleteById(file.getId()));
         } catch (Exception e) {
             log.error("Failed to cleanup file {}", file.getFileUuid(), e);
         }
