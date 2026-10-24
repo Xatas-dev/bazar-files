@@ -13,6 +13,12 @@ public class HibernateUnitOfWork implements UnitOfWork {
     public <T> T perform(Supplier<T> action) {
         return action.get();
     }
+
+    @Override
+    @Transactional
+    public void perform(Runnable action) {
+        action.run();
+    }
 }
 
 

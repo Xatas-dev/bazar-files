@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.bazar.app.api.MarkFileForDeletionInbound;
 import org.bazar.app.api.FileRepository;
 import org.bazar.app.api.UnitOfWork;
-import org.bazar.domain.File;
-import org.bazar.domain.FileStatus;
+import org.bazar.domain.file.File;
+import org.bazar.domain.file.FileStatus;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -23,7 +23,6 @@ public class MarkFileForDeletionUseCase implements MarkFileForDeletionInbound {
                 file.setStatus(FileStatus.DELETING);
                 fileRepository.update(file);
             });
-            return 0;
         });
     }
 }

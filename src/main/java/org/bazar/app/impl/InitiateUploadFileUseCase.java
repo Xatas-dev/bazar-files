@@ -8,8 +8,8 @@ import org.bazar.app.api.UnitOfWork;
 import org.bazar.app.impl.commands.InitiateUploadCommand;
 import org.bazar.app.impl.mapper.FileMapper;
 import org.bazar.app.impl.output.FileInfo;
-import org.bazar.domain.File;
-import org.bazar.domain.FileStatus;
+import org.bazar.domain.file.File;
+import org.bazar.domain.file.FileStatus;
 
 import java.util.UUID;
 

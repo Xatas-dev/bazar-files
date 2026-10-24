@@ -1,7 +1,7 @@
 package org.bazar.adapter.s3;
 
-import org.bazar.domain.File;
-import org.bazar.domain.FileMetadata;
+import org.bazar.domain.file.File;
+import org.bazar.domain.file.FileMetadata;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
