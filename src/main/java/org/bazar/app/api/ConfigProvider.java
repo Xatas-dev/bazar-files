@@ -7,6 +7,7 @@ import java.util.Map;
 
 public interface ConfigProvider {
     String getFilesBucketName();
+    String getFilesPublicBucketName();
     int getUploadUrlTtl();
     int getDownloadUrlTtl();
     int getDeletingFilesBatchSize();
@@ -15,4 +16,5 @@ public interface ConfigProvider {
     List<String> getNotAllowedExtensions();
     Map<ValidationErrorCode, String> getErrorMessages();
     int getOutboxMaxRetryCount();
+    String getExternalEndpoint();
 }

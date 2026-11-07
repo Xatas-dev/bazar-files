@@ -59,4 +59,14 @@ public class File {
      * Ошибки валидации файла
      */
     private List<FileValidationError> errors;
+
+    /**
+     * Имя бакета, куда сохраняется файл
+     */
+    private String bucketName;
+
+    /**
+     * Тип доступа к файлу
+     */
+    private FileAccessType accessType;
 }

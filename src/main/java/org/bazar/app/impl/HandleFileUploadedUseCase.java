@@ -49,7 +49,7 @@ public class HandleFileUploadedUseCase implements HandleFileUploadedInbound {
                     fileRepository.update(file);
                     // TODO: Доработать удаление файла (чистить ещё и в БД) - https://grinbog015.atlassian.net/browse/BZR-176
                     // И не удалять сразу здесь, а делать это в отдельном процессе, чтобы не нарушать согласованность данных (S3 и наша БД)
-                    storageService.deleteByObjectKey(file.getObjectKey());
+                    storageService.deleteFile(file);
                 } else {
                     file.setStatus(FileStatus.UPLOADED);
                     fileRepository.update(file);

@@ -11,7 +11,9 @@ public interface StorageService {
 
     String getDownloadUrl(File file);
 
-    void deleteByObjectKey(String objectKey);
+    void deleteFile(File file);
 
     FileMetadata getFileMetadata(File file);
+
+    String getPublicUrl(File file);
 }
