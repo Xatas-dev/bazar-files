@@ -58,4 +58,16 @@ public class FileEntity extends DomainObject {
      */
     @Column(name = "status")
     private String status;
+
+    /**
+     * Имя бакета, куда сохраняется файл
+     */
+    @Column(name = "bucket_name")
+    private String bucketName;
+
+    /**
+     * Тип доступа к файлу
+     */
+    @Column(name = "access_type")
+    private String accessType;
 }

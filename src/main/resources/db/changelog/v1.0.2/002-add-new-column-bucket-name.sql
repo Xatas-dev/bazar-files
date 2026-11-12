@@ -1,0 +1,5 @@
+ALTER TABLE file
+    ADD COLUMN IF NOT EXISTS bucket_name VARCHAR NOT NULL DEFAULT 'files';
+
+ALTER TABLE file
+    ALTER COLUMN bucket_name DROP DEFAULT;

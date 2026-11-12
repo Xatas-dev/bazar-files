@@ -11,6 +11,7 @@ import org.bazar.app.api.SendOutboxEventOutbound;
 import org.bazar.app.api.StorageService;
 import org.bazar.app.api.UnitOfWork;
 import org.bazar.app.impl.DeleteMarkedFilesUseCase;
+import org.bazar.app.impl.GetPublicUrlUseCase;
 import org.bazar.app.impl.HandleFileUploadedUseCase;
 import org.bazar.app.impl.InitiateDownloadFileUseCase;
 import org.bazar.app.impl.InitiateUploadFileUseCase;
@@ -25,8 +26,9 @@ public class BeanProducer {
     @Produces
     @Singleton
     InitiateUploadFileUseCase initiateUploadFileUseCase(FileRepository fileRepository, UnitOfWork unitOfWork,
-                                                        StorageService storageService, FileMapper fileMapper) {
-        return new InitiateUploadFileUseCase(fileRepository, unitOfWork, storageService, fileMapper);
+                                                        StorageService storageService, FileMapper fileMapper,
+                                                        ConfigProvider configProvider) {
+        return new InitiateUploadFileUseCase(fileRepository, unitOfWork, storageService, fileMapper, configProvider);
     }
 
     @Produces
@@ -67,6 +69,12 @@ public class BeanProducer {
     SendOutboxEventsUseCase sendOutboxEventsUseCase(OutboxRepository outboxRepository, SendOutboxEventOutbound sendOutBoxEventOutbound,
                                                     ConfigProvider configProvider, UnitOfWork unitOfWork) {
         return new SendOutboxEventsUseCase(outboxRepository, sendOutBoxEventOutbound, configProvider, unitOfWork);
+    }
+
+    @Produces
+    @Singleton
+    GetPublicUrlUseCase getPublicUrlUseCase(FileRepository fileRepository, StorageService storageService) {
+        return new GetPublicUrlUseCase(fileRepository, storageService);
     }
 
     @Produces

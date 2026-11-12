@@ -39,7 +39,7 @@ public class DeleteMarkedFilesUseCase implements DeleteMarkedFilesInbound {
 
     private void deleteSingleFile(File file) {
         try {
-            storageService.deleteByObjectKey(file.getObjectKey());
+            storageService.deleteFile(file);
             unitOfWork.perform(() -> fileRepository.deleteById(file.getId()));
         } catch (Exception e) {
             log.error("Failed to cleanup file {}", file.getFileUuid(), e);

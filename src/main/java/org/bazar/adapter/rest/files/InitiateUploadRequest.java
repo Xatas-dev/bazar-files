@@ -6,5 +6,6 @@ public record InitiateUploadRequest(
         @QueryParam("fileName") String fileName,
         @QueryParam("size") Integer size,
         @QueryParam("contentType") String contentType,
-        @QueryParam("domain") String domain) {
+        @QueryParam("domain") String domain,
+        @QueryParam("accessType") String accessType) {
 }

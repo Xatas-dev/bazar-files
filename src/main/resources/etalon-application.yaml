@@ -3,7 +3,7 @@ quarkus:
     username: postgres
     password: postgres
     jdbc:
-      url: jdbc:postgresql://localhost:5432/bazar_file
+      url: jdbc:postgresql://localhost:5432/bzrfiles
 
   s3:
     endpoint-override: http://localhost:9000
@@ -20,16 +20,23 @@ settings:
   s3:
     bucket:
       files: files
+      files-public: files-public
     upload-url-ttl: 3600
     download-url-ttl: 3600
     internal-endpoint: http://localhost:9000
+    external-endpoint: http://localhost:9000
   scheduler:
     delete-files:
       cron: "10s"
       batch-size: 2
+    send-outbox-events:
+      cron: "2s"
+      batch-size: 5
   file-validation:
     max-file-size: 20000
     not-allowed-extensions: [exe, sh, bat, msi, bin, ps1, hta]
+  outbox:
+    max-retry-count: 5
 
 kafka:
   bootstrap:
@@ -37,6 +44,17 @@ kafka:
 mp:
   messaging:
     outgoing:
-      file.events:
+      outbox-events:
+        connector: smallrye-kafka
         bootstrap:
           servers: localhost:9092
+        value:
+          serializer: org.apache.kafka.common.serialization.StringSerializer
+        delivery:
+          timeout:
+            ms: 7000
+        request:
+          timeout:
+            ms: 5000
+        linger:
+          ms: 0

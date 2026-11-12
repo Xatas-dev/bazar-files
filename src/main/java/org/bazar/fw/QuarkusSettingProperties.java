@@ -19,9 +19,11 @@ public interface QuarkusSettingProperties extends ConfigProvider {
         int uploadUrlTtl();
         int downloadUrlTtl();
         String internalEndpoint();
+        String externalEndpoint();
 
         interface Bucket {
             String files();
+            String filesPublic();
         }
     }
 
@@ -53,6 +55,11 @@ public interface QuarkusSettingProperties extends ConfigProvider {
     @Override
     default String getFilesBucketName() {
         return s3().bucket().files();
+    }
+
+    @Override
+    default String getFilesPublicBucketName() {
+        return s3().bucket().filesPublic();
     }
 
     @Override
@@ -93,5 +100,10 @@ public interface QuarkusSettingProperties extends ConfigProvider {
     @Override
     default int getOutboxMaxRetryCount() {
         return outbox().maxRetryCount();
+    }
+
+    @Override
+    default String getExternalEndpoint() {
+        return s3().externalEndpoint();
     }
 }
