@@ -8,8 +8,8 @@ import org.bazar.app.api.ConfigProvider;
 import org.bazar.app.api.StorageService;
 import org.bazar.app.api.exception.BusinessException;
 import org.bazar.app.api.exception.TechnicalException;
-import org.bazar.domain.File;
-import org.bazar.domain.FileMetadata;
+import org.bazar.domain.file.File;
+import org.bazar.domain.file.FileMetadata;
 import org.bazar.fw.InternalS3;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -46,7 +46,7 @@ public class StorageServiceAdapter implements StorageService {
     @Override
     public String getUploadUrl(File file) {
         PutObjectRequest objectRequest = PutObjectRequest.builder()
-                .bucket(configProvider.getFilesBucketName())
+                .bucket(file.getBucketName())
                 .key(file.getObjectKey())
                 .contentType(file.getContentType())
                 .build();
@@ -60,7 +60,7 @@ public class StorageServiceAdapter implements StorageService {
     @Override
     public String getDownloadUrl(File file) {
         GetObjectRequest objectRequest = GetObjectRequest.builder()
-                .bucket(configProvider.getFilesBucketName())
+                .bucket(file.getBucketName())
                 .key(file.getObjectKey())
                 .responseContentDisposition("attachment; filename=\"" + file.getFileName() + "\"")
                 .build();
@@ -72,23 +72,23 @@ public class StorageServiceAdapter implements StorageService {
     }
 
     @Override
-    public void deleteByObjectKey(String objectKey) {
+    public void deleteFile(File file) {
         DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
-                .bucket(configProvider.getFilesBucketName())
-                .key(objectKey)
+                .bucket(file.getBucketName())
+                .key(file.getObjectKey())
                 .build();
 
         try {
             s3Client.deleteObject(deleteRequest);
         } catch (S3Exception e) {
-            throw new BusinessException(FAILED_TO_DELETE_FILE_FROM_STORAGE, objectKey);
+            throw new BusinessException(FAILED_TO_DELETE_FILE_FROM_STORAGE, file.getObjectKey());
         }
     }
 
     @Override
     public FileMetadata getFileMetadata(File file) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(configProvider.getFilesBucketName())
+                .bucket(file.getBucketName())
                 .key(file.getObjectKey())
                 .range(RANGE)
                 .build();
@@ -101,5 +101,10 @@ public class StorageServiceAdapter implements StorageService {
             log.error("Failed to get file metadata", e);
             throw new TechnicalException("Failed to get file metadata");
         }
+    }
+
+    @Override
+    public String getPublicUrl(File file) {
+        return String.format("%s/%s/%s", configProvider.getExternalEndpoint(), file.getBucketName(), file.getObjectKey());
     }
 }

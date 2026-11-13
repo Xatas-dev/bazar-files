@@ -1,5 +1,6 @@
 package org.bazar.adapter.rest.files;
 
+import org.bazar.app.impl.commands.GetPublicUrlCommand;
 import org.bazar.app.impl.commands.InitiateDownloadCommand;
 import org.bazar.app.impl.commands.InitiateUploadCommand;
 import org.bazar.app.impl.output.FileInfo;
@@ -21,4 +22,8 @@ public interface RestFileMapper {
     InitiateDownloadResponse toInitiateDownloadResponse(String downloadUrl);
 
     InitiateDownloadCommand toInitiateDownloadCommand(UUID fileUuid);
+
+    GetPublicUrlCommand toGetPublicUrlCommand(UUID fileUuid);
+
+    GetPublicUrlResponse toGetPublicUrlResponse(String publicUrl);
 }

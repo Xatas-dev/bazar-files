@@ -5,7 +5,8 @@ import lombok.Getter;
 
 public enum ErrorCode {
     FILE_NOT_FOUND_BY_FILE_UUID(Response.Status.NOT_FOUND, "File not found with fileUuid: %s"),
-    FAILED_TO_DELETE_FILE_FROM_STORAGE(Response.Status.SERVICE_UNAVAILABLE, "Failed to delete file with objectUuid: %s");
+    FAILED_TO_DELETE_FILE_FROM_STORAGE(Response.Status.SERVICE_UNAVAILABLE, "Failed to delete file with objectUuid: %s"),
+    FILE_HAS_INCORRECT_ACCESS_TYPE(Response.Status.FORBIDDEN, "File %s has incorrect access type %s");
 
     @Getter
     private final Response.Status status;

@@ -1,16 +1,20 @@
 package org.bazar.app.api;
 
-import org.bazar.domain.ValidationErrorCode;
+import org.bazar.domain.file.ValidationErrorCode;
 
 import java.util.List;
 import java.util.Map;
 
 public interface ConfigProvider {
     String getFilesBucketName();
+    String getFilesPublicBucketName();
     int getUploadUrlTtl();
     int getDownloadUrlTtl();
     int getDeletingFilesBatchSize();
+    int getSendingOutboxEventsBatchSize();
     long getMaxFileSize();
     List<String> getNotAllowedExtensions();
     Map<ValidationErrorCode, String> getErrorMessages();
+    int getOutboxMaxRetryCount();
+    String getExternalEndpoint();
 }

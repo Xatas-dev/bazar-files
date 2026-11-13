@@ -1,4 +1,4 @@
-package org.bazar.domain;
+package org.bazar.domain.file;
 
 public enum ValidationErrorCode {
     FILE_TOO_LARGE,

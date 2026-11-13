@@ -8,4 +8,6 @@ import java.util.function.Supplier;
 // Но это, конечно, немного загрязняет архитектуру
 public interface UnitOfWork {
     <T> T perform(Supplier<T> action);
+
+    void perform(Runnable action);
 }

@@ -1,17 +1,23 @@
 package org.bazar.fw;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Singleton;
 import org.bazar.app.api.ConfigProvider;
 import org.bazar.app.api.FileRepository;
-import org.bazar.app.api.NotifyFileUploadedOutbound;
+import org.bazar.app.api.OutboxRepository;
+import org.bazar.app.api.EventService;
+import org.bazar.app.api.SendOutboxEventOutbound;
 import org.bazar.app.api.StorageService;
 import org.bazar.app.api.UnitOfWork;
 import org.bazar.app.impl.DeleteMarkedFilesUseCase;
+import org.bazar.app.impl.GetPublicUrlUseCase;
 import org.bazar.app.impl.HandleFileUploadedUseCase;
 import org.bazar.app.impl.InitiateDownloadFileUseCase;
 import org.bazar.app.impl.InitiateUploadFileUseCase;
 import org.bazar.app.impl.MarkFileForDeletionUseCase;
+import org.bazar.app.impl.SendOutboxEventsUseCase;
+import org.bazar.app.impl.helpers.FileEventJsonMapper;
 import org.bazar.app.impl.helpers.FileMetadataValidator;
 import org.bazar.app.impl.mapper.FileMapper;
 
@@ -20,16 +26,17 @@ public class BeanProducer {
     @Produces
     @Singleton
     InitiateUploadFileUseCase initiateUploadFileUseCase(FileRepository fileRepository, UnitOfWork unitOfWork,
-                                                        StorageService storageService, FileMapper fileMapper) {
-        return new InitiateUploadFileUseCase(fileRepository, unitOfWork, storageService, fileMapper);
+                                                        StorageService storageService, FileMapper fileMapper,
+                                                        ConfigProvider configProvider) {
+        return new InitiateUploadFileUseCase(fileRepository, unitOfWork, storageService, fileMapper, configProvider);
     }
 
     @Produces
     @Singleton
     HandleFileUploadedUseCase handleFileUploadedUseCase(FileRepository fileRepository, UnitOfWork unitOfWork,
-                                                        NotifyFileUploadedOutbound notifyFileUploadedOutbound,
-                                                        StorageService storageService, FileMetadataValidator validator) {
-        return new HandleFileUploadedUseCase(fileRepository, unitOfWork, notifyFileUploadedOutbound, storageService, validator);
+                                                        EventService eventService, StorageService storageService,
+                                                        FileMetadataValidator validator, FileMapper fileMapper) {
+        return new HandleFileUploadedUseCase(fileRepository, unitOfWork, eventService, storageService, validator, fileMapper);
     }
 
     @Produces
@@ -55,5 +62,24 @@ public class BeanProducer {
     @Singleton
     FileMetadataValidator fileMetadataValidator(ConfigProvider configProvider) {
         return new FileMetadataValidator(configProvider);
+    }
+
+    @Produces
+    @Singleton
+    SendOutboxEventsUseCase sendOutboxEventsUseCase(OutboxRepository outboxRepository, SendOutboxEventOutbound sendOutBoxEventOutbound,
+                                                    ConfigProvider configProvider, UnitOfWork unitOfWork) {
+        return new SendOutboxEventsUseCase(outboxRepository, sendOutBoxEventOutbound, configProvider, unitOfWork);
+    }
+
+    @Produces
+    @Singleton
+    GetPublicUrlUseCase getPublicUrlUseCase(FileRepository fileRepository, StorageService storageService) {
+        return new GetPublicUrlUseCase(fileRepository, storageService);
+    }
+
+    @Produces
+    @Singleton
+    FileEventJsonMapper fileEventJsonMapper(ObjectMapper objectMapper) {
+        return new FileEventJsonMapper(objectMapper);
     }
 }
