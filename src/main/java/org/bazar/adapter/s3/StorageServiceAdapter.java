@@ -17,6 +17,7 @@ import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
+import software.amazon.awssdk.utils.http.SdkHttpUtils;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -105,6 +106,9 @@ public class StorageServiceAdapter implements StorageService {
 
     @Override
     public String getPublicUrl(File file) {
-        return String.format("%s/%s/%s", configProvider.getExternalEndpoint(), file.getBucketName(), file.getObjectKey());
+        return String.format("%s/%s/%s",
+                configProvider.getExternalEndpoint(),
+                SdkHttpUtils.urlEncodeIgnoreSlashes(file.getBucketName()),
+                SdkHttpUtils.urlEncodeIgnoreSlashes(file.getObjectKey()));
     }
 }
