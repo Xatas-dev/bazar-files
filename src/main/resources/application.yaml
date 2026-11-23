@@ -49,6 +49,12 @@ settings:
 kafka:
   bootstrap:
     servers: ${INTEGRATION_KAFKA_BOOTSTRAP_SERVERS}
+  security:
+    protocol: ${KAFKA_SECURITY_PROTOCOL:SASL_PLAINTEXT}
+  sasl:
+    mechanism: ${KAFKA_SASL_MECHANISM:PLAIN}
+    jaas:
+      config: 'org.apache.kafka.common.security.plain.PlainLoginModule required username="${KAFKA_USERNAME:user1}" password="${KAFKA_PASSWORD}";'
 
 mp:
   messaging:
